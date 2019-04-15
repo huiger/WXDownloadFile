@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">微信下载文件</string>
+    <string name="message_permission_always_failed">为保证使用流畅, 请授予我们权限:\n\n%1$s</string>
+</resources>

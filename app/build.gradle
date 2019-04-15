@@ -1,0 +1,56 @@
+apply plugin: 'com.android.application'
+def releaseTime() {
+    return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC"))
+}
+android {
+    signingConfigs {
+        config {
+            keyAlias 'wx'
+            keyPassword 'wx123456'
+            storeFile file('../key/wx.jks')
+            storePassword 'wx123456'
+        }
+    }
+    compileSdkVersion 27
+    defaultConfig {
+        applicationId "top.huiger.wxdownloadfile"
+        minSdkVersion 19
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
+        }
+    }
+
+    //输出apk到本地指定位置
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            if (variant.buildType.name == "release") {
+//                def outputPathName = "./apk"
+                def newName = 'wxfile_v' + versionName + "_${releaseTime()}_" + variant.buildType.name + '.apk'
+//                output.outputFileName = new File(outputPathName, output.outputFile.name.replace("app-release.apk", newName))
+                variant.getPackageApplication().outputDirectory = new File(project.rootDir.absolutePath + File.separator + "apk")
+                output.outputFileName = newName
+            }
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    implementation 'com.huiger:HGUtils:1.2.7'
+    implementation 'com.yanzhenjie:permission:2.0.0-rc12'
+    implementation 'com.android.support:design:27.1.1'
+    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.40'
+}
